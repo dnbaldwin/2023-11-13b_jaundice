@@ -1,0 +1,18 @@
+[
+    {
+        "time": 0,
+        "treat": 85,
+        "exchange": 230
+    },
+    {
+        "time": 12,
+        "treat": 130,
+        "exchange": 255
+    },
+    {
+        "time": 24,
+        "treat": 175,
+        "exchange": 280
+    }
+]
+    

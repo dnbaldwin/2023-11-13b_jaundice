@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaundice Graphs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
+        integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+
+    <head>
+    </head>
+</head>
+
+<body>
+    <div id="plot"></div>
+
+    <div id="button_container">
+        <button class="btn" id="btn1">High Risk </button>
+        <button class="btn" id="btn1">btn2</button>
+        <button class="btn" id="btn1">btn3</button>
+        <button class="btn" id="btn1">btn4</button>
+        
+    </div>
+</body>
+
+<script type="text/javascript" charset="utf-8">
+    
+
+function convertRow(d) {
+    return {
+        time: +d.time,
+        treat: +d.treat,
+        exchange: +d.exchange
+        }
+    }
+
+d3.csv('/data/bilirubin.csv', convertRow)
+  .then(function(data) {
+    console.log(data);
+    plotData(data);
+
+  });
+  
+function plotData(data) {
+
+    var trace0 = {
+        x: data.map(row => row.time),
+        y: data.map(row => row.treat),
+        xaxis: 'x',
+        yaxis: 'y',
+        name: 'Treat',
+        type: 'scatter'
+    };
+
+    var trace1 = {
+        x: data.map(row => row.time),
+        y: data.map(row => row.exchange),
+        xaxis: 'x',
+        yaxis: 'y',
+        name: 'Exchange',
+        type: 'scatter'
+    };
+
+    var data = [trace0, trace1];
+
+    Plotly.react('plot', data);
+
+};
+</script>
+
+</html>
