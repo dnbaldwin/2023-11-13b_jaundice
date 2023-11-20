@@ -8,6 +8,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
         integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="static/style.css" />
+
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -20,18 +23,67 @@
 <body>
     <div id="plot"></div>
 
-    <div id="button_container">
-        <button class="btn" id="btn1">High Risk </button>
-        <button class="btn" id="btn1">btn2</button>
-        <button class="btn" id="btn1">btn3</button>
-        <button class="btn" id="btn1">btn4</button>
-        
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <label>Select Gestation Group</label><br>
+            <button class="btn btnGest" id="btn37"> ≥ 37+0</button><br>
+            <button class="btn btnGest" id="btn35">35+0 – 36+6</button><br>
+            <button class="btn btnGest" id="btn34">34+0 – 34+6</button><br>
+            <button class="btn btnGest" id="btn32">32+0 – 33+6</button><br>
+            <button class="btn btnGest" id="btn30">30+0 – 31+6</button><br>
+            <button class="btn btnGest" id="btn28">28+0 – 29+6</button><br>
+            <button class="btn btnGest" id="btn22">22+0 – 27+6</button><br>
+        </div>
+        <div class="col-sm">
+            <label>Haemolysis Risk</label><br>
+            <button class="btn btnHaem" id="haemRiskLow"> Low</button><br>
+            <button class="btn btnHaem" id="haemRiskHigh">High</button><br>
+            <br>
+            <label>Sick Baby?</label><br>
+            <label>(Seizures, abnormal cry, hypoglycaemia, etc)</label>
+            <button class="btn btnSick" id="sickBabyNo">No</button><br>
+            <button class="btn btnSick" id="sickBabyYes">Yes</button><br>
+        </div>
+        <div class="col-sm">
+            <label>Feeding Status</label><br>
+            <button class="btn btnFeed" id="feedStatusGood">Good</button><br>
+            <button class="btn btnFeed" id="feedStatusPoor">Poor</button><br>
+            <br>
+            <label>Lethargy / Sleepiness</label><br>
+            <button class="btn btnSleep" id="sleepyNo">No</button><br>
+            <button class="btn btnSleep" id="sleepyYes">Yes</button><br>
+            
+        </div>
+        <div class="col-sm">
+            <label>Weight Loss</label><br>
+            <button class="btn btnWeight" id="weightLossLt12">≤ 12%</button><br>
+            <button class="btn btnWeight" id="weightLossGt12">> 12%</button><br>
+        </div>
     </div>
+</div>
 </body>
 
 <script type="text/javascript" charset="utf-8">
-    
 
+    var gestation = null;
+    var haemRisk = null;
+    var sickBaby = null;
+    var feedStatus = null;
+    var sleepiness = null;
+    var weightLoss = null;
+
+    var profileObj = 
+        {
+        "gestation": gestation,
+        "haemRisk": haemRisk,
+        "sickBaby": sickBaby,
+        "feedStatus": feedStatus,
+        "sleepiness": sleepiness,
+        "weightLoss": weightLoss
+        };
+    
 function convertRow(d) {
     return {
         time: +d.time,
@@ -40,38 +92,317 @@ function convertRow(d) {
         }
     }
 
-d3.csv('/data/bilirubin.csv', convertRow)
-  .then(function(data) {
-    console.log(data);
-    plotData(data);
+function getChartData(dataFile) {
+    //d3.csv('/data/bilirubin.csv', convertRow)
+    d3.csv(dataFile, convertRow)
+        .then(function(data) {
+            console.log(data);
+            plotData(data);
+        });
+    }
 
+function checkProfile() {
+    console.log("profileObj:", profileObj);
+
+    var objValues = Object.values(profileObj);
+    console.log("objValues:", objValues);
+
+    let isNull = value => value == null;
+
+    let filteredArray = objValues.filter(isNull);
+
+    console.log(filteredArray.length);
+
+    if (filteredArray.length === 0) {
+        selectChart();
+    }    
+}
+
+function selectChart() {
+
+    gestation = profileObj.gestation;
+    sickBaby = profileObj.sickBaby;
+    haemRisk = profileObj.haemRisk;
+    weightLoss = profileObj.weightLoss;
+    feedStatus = profileObj.feedStatus;
+    sleepiness = profileObj.sleepiness;
+    
+
+
+    // >=37w. no risk factors. well and thriving
+
+    if (gestation >= 37 &&
+        sickBaby == "no" &&
+        haemRisk == "low" &&
+        weightLoss == "lt12" &&
+        feedStatus == "good" &&
+        sleepiness == "no"
+    ) {
+        var dataFile = '/data/bilirubin_37on_noHaem_feedGood_weightlossLt12.csv';
+        console.log("/data/bilirubin_37on_noHaem_feedGood_weightlossLt12.csv")
+        getChartData(dataFile);
+    }
+
+    // >=37w. risk of haemolysis
+
+    if (gestation >= 37 &&
+        sickBaby == "no" &&
+        haemRisk == "high" &&
+        weightLoss == "lt12" || weightLoss == "gt12" &&
+        feedStatus == "good" || feedStatus == "poor" &&
+        sleepiness == "no" || sleepiness == "yes"
+    ) {
+        var dataFile = '/data/bilirubin_37on_highRisk_orConfirmed_Haem.csv';
+        console.log("/data/bilirubin_37on_highRisk_orConfirmed_Haem.csv")
+        getChartData(dataFile);
+    }
+
+    // >=37w. no setup for Haemolysis, poor feeding, sleepy or weightloss >12%
+
+    if (gestation >= 37 &&
+        sickBaby == "no" &&
+        haemRisk == "low" &&
+        weightLoss == "gt12" ||
+        feedStatus == "poor" ||
+        sleepiness == "yes"
+        )
+        {
+        var dataFile = '/data/bilirubin_37on_noHaem_feedPoor_weightlossGt12_sleepy.csv';
+        console.log("/data/bilirubin_37on_noHaem_feedPoor_weightlossGt12_sleepy.csv")
+        getChartData(dataFile);
+    }
+
+    // 35.0 - 36.6w. no setup for Haemolysis, feeding good, well, not sleepy or weightloss <12%
+
+    if (gestation >= 35 && gestation < 37 &&
+        sickBaby == "no" &&
+        haemRisk == "low" &&
+        weightLoss == "lt12" &&
+        feedStatus == "good" &&
+        sleepiness == "no"
+        )
+        {
+        var dataFile = '/data/bilirubin_35-0to36-6_noHaem_feedGood_weightlossLt12.csv';
+        console.log("/data/bilirubin_35-0to36-6_noHaem_feedGood_weightlossLt12.csv")
+        getChartData(dataFile);
+        }
+
+    // 35.0 - 36.6w. High risk / confirmed Haemolysis, feeding poor, or weightloss >12%
+
+    if (gestation >= 35 && gestation < 37 &&
+        sickBaby == "no" &&
+        haemRisk == "high" ||
+        weightLoss == "gt12" ||
+        feedStatus == "poor" &&
+        sleepiness == "no" || sleepiness == "yes"
+        )
+        {
+        var dataFile = '/data/bilirubin_35-0to36-6_highRiskHaem_feedPoor_weightlossGt12.csv';
+        console.log("/data/bilirubin_35-0to36-6_highRiskHaem_feedPoor_weightlossGt12.csv")
+        getChartData(dataFile);
+        }
+    // preterm baby
+
+    // >=35w. cleary unwell - any of fever, irritable, abnormal cry, not feeding, low BSL, HIE
+
+    if (gestation >= 35 &&
+        sickBaby == "yes" ||
+        feedStatus == "poor" ||
+        sleepiness == "yes"
+        )
+        {
+        var dataFile = '/data/bilirubin_35on_sick.csv';
+        console.log("/data/bilirubin_35on_sick.csv")
+        getChartData(dataFile);
+    }
+
+    if (profileObj.gestation < 30) {
+        var dataFile = '/data/bilirubin_highriskpreterm.csv';
+        console.log("/data/bilirubin_highriskpreterm.csv")
+        getChartData(dataFile);
+    }
+
+
+}
+
+d3.selectAll(".btn").on("click", function(){
+    var elem = this.id;
+
+    switch (elem) {
+        case "btn22":
+            profileObj.gestation = 22;
+            var dataFile = '/data/bilirubin_highriskpreterm.csv';
+        break;
+
+        case "btn28":
+            profileObj.gestation = 28;
+            var dataFile = '/data/bilirubin_highriskpreterm.csv';
+        break;
+
+        case "btn30":
+            profileObj.gestation = 30;
+            var dataFile = '/data/bilirubin_highriskpreterm.csv';
+        break;
+
+        case "btn32":
+            profileObj.gestation = 32;
+            var dataFile = '/data/bilirubin_pretermsub35.csv';
+        break;
+
+        case "btn34":
+            profileObj.gestation = 34;
+            var dataFile = '/data/bilirubin_sbrlatepremsickterm.csv';
+        break;
+
+        case "btn35":
+            profileObj.gestation = 35;
+            var dataFile = '/data/bilirubin_sbrlowriskover35.csv';
+        break;
+
+        case "btn37":
+            profileObj.gestation = 37;
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "haemRiskLow":
+            profileObj.haemRisk = "low";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "haemRiskHigh":
+            profileObj.haemRisk = "high";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "sickBabyNo":
+            profileObj.sickBaby = "no";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "sickBabyYes":
+            profileObj.sickBaby = "yes";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "feedStatusGood":
+            profileObj.feedStatus = "good";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "feedStatusPoor":
+            profileObj.feedStatus = "poor";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "sleepyYes":
+            profileObj.sleepiness = "yes";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "sleepyNo":
+            profileObj.sleepiness = "no";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "weightLossGt12":
+            profileObj.weightLoss = "gt12";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+
+        case "weightLossLt12":
+            profileObj.weightLoss = "lt12";
+            var dataFile = '/data/bilirubin_sbrlowriskover37.csv';
+        break;
+    }
+    console.log(elem);
+    checkProfile(profileObj);
+});
+
+$('.btnGest').click(function() {
+    $('.btnGest').not($(this)).css('background', 'blue');
+    $(this).css('background','skyblue');
   });
+
+$('.btnHaem').click(function() {
+    $('.btnHaem').not($(this)).css('background', 'blue');
+    $(this).css('background','skyblue');
+});
+
+$('.btnSick').click(function() {
+    $('.btnSick').not($(this)).css('background', 'blue');
+    $(this).css('background','skyblue');
+});
+
+$('.btnFeed').click(function() {
+    $('.btnFeed').not($(this)).css('background', 'blue');
+    $(this).css('background','skyblue');
+});
+
+$('.btnSleep').click(function() {
+    $('.btnSleep').not($(this)).css('background', 'blue');
+    $(this).css('background','skyblue');
+});
+
+$('.btnWeight').click(function() {
+    $('.btnWeight').not($(this)).css('background', 'blue');
+    $(this).css('background','skyblue');
+});
+//'/data/bilirubin.csv'
   
 function plotData(data) {
 
     var trace0 = {
-        x: data.map(row => row.time),
-        y: data.map(row => row.treat),
-        xaxis: 'x',
-        yaxis: 'y',
-        name: 'Treat',
-        type: 'scatter'
-    };
-
-    var trace1 = {
+        type: 'scatter',
+        mode: "lines",
         x: data.map(row => row.time),
         y: data.map(row => row.exchange),
         xaxis: 'x',
         yaxis: 'y',
         name: 'Exchange',
-        type: 'scatter'
+        
     };
+
+    var trace1 = {
+        type: 'scatter',
+        mode: "lines",
+        x: data.map(row => row.time),
+        y: data.map(row => row.treat),
+        xaxis: 'x',
+        yaxis: 'y',
+        name: 'Treat',
+    };
+
+    var layout = {
+        title: "Bilirubin Treatment Graph",
+        showlegend: true,
+        width: 800,
+        height: 480,
+        xaxis: {
+            title: "Age (hours)",
+            range: [0, 170],
+            tickmode: "linear",
+            tick0: 0,
+            dtick: 12
+        },
+        yaxis: {
+            title: "Total plasma bilirubin (umol/L)",
+            range: [0, 450],
+            tickmode: "linear",
+            tick0: 0,
+            dtick: 25
+        }
+
+    }
 
     var data = [trace0, trace1];
 
-    Plotly.react('plot', data);
+    //Plotly.react('plot', data, layout, {responsive: true});
+    Plotly.react('plot', data, layout);
 
 };
+
+data = [];
+plotData(data);
 </script>
 
 </html>

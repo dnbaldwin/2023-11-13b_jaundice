@@ -1,0 +1,231 @@
+@charset "UTF-8";
+
+/* CSS Document */
+#headerContainer {
+    align-self: center;
+}
+
+body {
+    background-color: rgb(255, 255, 255)
+}
+
+.header {
+    background-color: rgb(24, 127, 224);
+    height: 120px;
+    width: 100%;
+}
+
+.h1 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-size: 32px;
+    color: rgb(24, 12, 199);
+    text-align: center;
+}
+
+.h3 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-size: 24px;
+    color: silver;
+    text-align: center;
+}
+
+.btn {
+    background-color: #0000FF;
+    border: none;
+    color: white;
+    padding: 12px;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 8px;
+    width: 100px;
+    height: 30px;
+    line-height: 0;
+}
+
+#table1 {
+    font-size: 12px;
+    column-width: 100px;
+    align-content: center;
+}
+
+.tableData td,
+th {
+    font-size: 12px;
+    align-content: center;
+}
+
+#one {
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+}
+
+#two {
+    width: 100px;
+    height: 100px;
+    border: 1px solid blue;
+}
+
+#myDiv {
+    border: 1px solid;
+    width: 400px;
+    height: 200px;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    border-radius: 4px;
+}
+
+#div_test {
+    border: 1px solid;
+    width: 400px;
+    height: 200px;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    border-radius: 4px;
+}
+
+
+#allBtns {
+    display: flex;
+    justify-content: space-around;
+}
+
+#submit {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+}
+
+.createdDiv {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #ebebeb;
+    border-radius: 4px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    /*position:absolute;*/
+    /*background:#d2d2d2;*/
+}
+
+.slide {
+    width: 200px;
+    height: 100%;
+    position: absolute;
+    right: -200px;
+    top: 0;
+    background: #d2d2d2;
+}
+
+#close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10;
+    display: none;
+}
+
+/*
+  #right-content {
+	position:absolute;
+	right:0;
+	top:0;
+	overflow:hidden;
+	width:200px;
+	height:100%;
+  }
+  */
+.center-screen {
+    display: flex;
+    justify-content: center;
+    /*align-items: center;
+	text-align: center;
+	min-height: 100vh;*/
+}
+
+.div {
+    display: none;
+}
+
+.div_line {
+    display: flex;
+    /*justify-content: center;*/
+    width: 100%;
+    border: rgb(224, 24, 24);
+    background-color: #9ac2f0;
+}
+
+.taskLabel {
+    /*justify-self: left;*/
+    display: flex;
+    box-align: left;
+}
+
+.taskButton {
+    display: flex;
+    box-align: right;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+p {
+    margin: 0 0 1em 0;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+}
+
+.container {
+    /*width: 400px;*/
+    width: 100%;
+    /*height: 5em;*/
+    border: 2px solid rgb(35, 86, 197);
+    border-radius: .5em;
+    padding: 10px;
+    justify-content: space-between;
+    align-content: space-between;
+}
+
+.item {
+    padding: 10px;
+    background-color: rgba(42, 137, 214, 0.3);
+    border: 2px solid rgba(48, 41, 111, 0.5);
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    border: 2px solid yellow;
+}
+
+.flex-child:first-child {
+    margin-right: 20px;
+}
