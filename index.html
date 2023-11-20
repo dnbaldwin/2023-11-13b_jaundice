@@ -216,12 +216,23 @@ function selectChart() {
         getChartData(dataFile);
     }
 
-    if (profileObj.gestation < 30) {
-        var dataFile = '/data/bilirubin_highriskpreterm.csv';
-        console.log("/data/bilirubin_highriskpreterm.csv")
+    if (gestation >=30 && gestation <32) {
+        var dataFile = '/data/bilirubin_30-0_31-6w.csv';
+        console.log("/data/bilirubin_30-0_31-6w.csv")
         getChartData(dataFile);
     }
 
+    if (gestation >=28 && gestation <30) {
+        var dataFile = '/data/bilirubin_28-0_29-6w.csv';
+        console.log("/data/bilirubin_28-0_29-6w.csv")
+        getChartData(dataFile);
+    }
+
+    if (gestation >=22 && gestation <28) {
+        var dataFile = '/data/bilirubin_22-0_27-6w.csv';
+        console.log("/data/bilirubin_22-0_27-6w.csv")
+        getChartData(dataFile);
+    }
 
 }
 
