@@ -59,6 +59,10 @@ th {
     align-content: center;
 }
 
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
 #one {
     width: 100px;
     height: 100px;
