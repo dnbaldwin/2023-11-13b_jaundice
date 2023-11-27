@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/idb@3.0.2/build/idb.min.js">
+      < /head> < body >
+    </script>
+    <button onclick="addLesson()">Add a lesson</button>
+    <button onclick="clearLessons()">Clear lessons</button>
+    <p>Lessons list:</p>
+    <ul id="listElem"></ul>
+    <script>
+      let db;
+      init();
+      async function init() {
+        db = await idb.openDb('lessonsDb', 1, db => {
+          db.createObjectStore('lessons', {
+            keyPath: 'name'
+          });
+        });
+        list();
+      }
+      async function list() {
+        let tx = db.transaction('lessons');
+        let lessonStore = tx.objectStore('lessons');
+        let lessons = await lessonStore.getAll();
+        if(lessons.length) {
+          listElem.innerHTML = lessons.map(lesson => `<li>
+              name: ${lesson.name}, price: ${lesson.price}
+            </li>`)
+            .join('');
+        } else {
+          listElem.innerHTML = '<li>No lessons yet. Please add lessons.</li>'
+        }
+      }
+      async function clearLessons() {
+        let tx = db.transaction('lessons', 'readwrite');
+        await tx.objectStore('lessons')
+          .clear();
+        await list();
+      }
+      async function addLesson() {
+        let name = prompt("Lesson name?");
+        let price = +prompt("Lesson price?");
+        let tx = db.transaction('lessons', 'readwrite');
+        try {
+          await tx.objectStore('lessons')
+            .add({
+              name, price
+            });
+          await list();
+        } catch(err) {
+          if(err.name == 'ConstraintError') {
+            alert("Such lesson exists already");
+            await addLesson();
+          } else {
+            throw err;
+          }
+        }
+      }
+      window.addEventListener('unhandledrejection', event => {
+        alert("Error: " + event.reason.message);
+      });
+    </script>
+    </body>
+</html>

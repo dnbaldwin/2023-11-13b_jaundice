@@ -120,6 +120,47 @@
 
     //document.querySelectorAll('.btn').forEach(elem => elem.disabled = true);
 
+    // IDB learnt from Steve Griffith YouTube with thanks. Prof3ssorSt3v3
+
+    const IDB = (function init() {
+        let db = null;
+        let objectStore = null;
+        let DBOpenReq = indexedDB.open('JaundiceDB', 1);
+
+        DBOpenReq.addEventListener('error', (err) => {
+            //Error occurred while trying to open DB
+            console.warn(err);
+        });
+        DBOpenReq.addEventListener('success', (ev) => {
+            //DB has been opened... after upgradeneeded
+            db = ev.target.result;
+            console.log('success', db);
+        });
+        DBOpenReq.addEventListener('upgradeneeded', (ev) => {
+            //first time opening this DB
+            //OR a new version was passed into open()
+            db = ev.target.result;
+            let oldVersion = ev.oldVersion;
+            let newVersion = ev.newVersion || db.version;
+            console.log('DB updated from version', oldVersion, 'to', newVersion);
+
+            // *** note adding and removing stores MUST be done in the upgradeneeded section of code ***
+
+            console.log('upgrade', db);
+            if (!db.objectStoreNames.contains('patientData')) {
+            objectStore = db.createObjectStore('patientData', {
+                keyPath: 'id',
+            });
+            }
+            // db.createObjectStore('foobar');
+            if (db.objectStoreNames.contains('foobar')) {
+            db.deleteObjectStore('foobar');
+            }
+        });
+    });
+    
+    
+
 
     var gestation = null;
     var haemRisk = null;
@@ -144,7 +185,7 @@
         {
         title: title,
         showlegend: true,
-        width: 800,
+        width: 680,
         height: 480,
         xaxis: {
             title: "Age (hours)",
